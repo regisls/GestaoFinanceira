@@ -4,6 +4,7 @@ import LancamentoRepositorie from '../../core/Repositories/LancamentoRepositorie
 import {
   LISTAR_LANCAMENTOS_ANO_SUCESSO,
   LISTAR_LANCAMENTOS_ANO_ERRO,
+  MODIFICAR_ANO_REFERENCIA,
 } from '../types';
 
 export const listarLancamentosAno = (year: Number) => {
@@ -29,5 +30,12 @@ export const listarLancamentosErro = (error, dispatch) => {
   dispatch({
     type: LISTAR_LANCAMENTOS_ANO_ERRO,
     payload: error,
+  });
+};
+
+export const modificarAnoReferencia = (ano: Number, dispatch) => {
+  dispatch({
+    type: MODIFICAR_ANO_REFERENCIA,
+    payload: ano,
   });
 };

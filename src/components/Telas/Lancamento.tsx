@@ -3,16 +3,20 @@ import {Text, View} from 'react-native';
 import {connect} from 'react-redux';
 
 import {listarPessoas} from '../../store/actions/autenticacaoActions';
-import {listarLancamentosAno} from '../../store/actions/lancamentoActions';
+import {
+  listarLancamentosAno,
+  modificarAnoReferencia,
+} from '../../store/actions/lancamentoActions';
 
 const Lancamento = props => {
+  //const ano = props.modificarAnoReferencia;
+  
   useEffect(() => {
     (async () => {
-      const dataAtual = new Date();
       props.listarPessoas();
-      props.listarLancamentosAno(dataAtual.getFullYear());
+      props.listarLancamentosAno(props.anoReferencia);
     })();
-  });
+  }, []);
 
   return (
     <View>
@@ -35,9 +39,11 @@ const Lancamento = props => {
 const mapStateToProps = state => ({
   pessoas: state.autenticacao.pessoas,
   lancamentos: state.lancamento.lancamentos,
+  anoReferencia: state.lancamento.anoReferencia,
 });
 
 export default connect(mapStateToProps, {
   listarPessoas,
   listarLancamentosAno,
+  modificarAnoReferencia,
 })(Lancamento);
