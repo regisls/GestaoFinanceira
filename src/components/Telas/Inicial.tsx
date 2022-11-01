@@ -1,6 +1,7 @@
-import React, {useState} from 'react';;
-import {Dimensions} from 'react-native';;
-import {SceneMap, TabView} from 'react-native-tab-view';
+import React, {useState} from 'react';
+import {Dimensions, StyleSheet} from 'react-native';
+import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
+import {getIconeTabView} from '../IconesTabView';
 
 import Dashboard from './Dashboard';
 import Lancamento from './Lancamento';
@@ -13,13 +14,13 @@ const initialLayout = {width: Dimensions.get('window').width};
 const Inicial = () => {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    {key: 'first', title: 'Dashboard'},
-    {key: 'second', title: 'Lançamentos'},
+    {key: 'dashboard', title: 'Dashboard'},
+    {key: 'lancamentos', title: 'Lançamentos'},
   ]);
 
   const renderScene = SceneMap({
-    first: dashboard,
-    second: lancamento,
+    dashboard: dashboard,
+    lancamentos: lancamento,
   });
 
   return (
@@ -28,8 +29,23 @@ const Inicial = () => {
       renderScene={renderScene}
       onIndexChange={setIndex}
       initialLayout={initialLayout}
+      tabBarPosition="bottom"
+      renderTabBar={props => (
+        <TabBar
+          {...props}
+          renderIcon={props => getIconeTabView(props)}
+          labelStyle={styles.noLabel}
+        />
+      )}
     />
   );
 };
+
+const styles = StyleSheet.create({
+  noLabel: {
+    display: 'none',
+    heiht: 0,
+  },
+});
 
 export default Inicial;

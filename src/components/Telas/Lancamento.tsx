@@ -3,16 +3,18 @@ import {Text, StyleSheet, View} from 'react-native';
 import {connect} from 'react-redux';
 
 import {listarPessoas} from '../../store/actions/autenticacaoActions';
+import mesExtenso from '../NomeMes';
+import Card from '../Shared/Card';
 import {
   listarLancamentosAno,
   modificarAnoReferencia,
 } from '../../store/actions/lancamentoActions';
-import mesExtenso from '../NomeMes';
 
 var result = [];
 
 const Lancamento = props => {
   const agruparDados = () => {
+    result = [];
     props.lancamentos.forEach(lacto => {
       if (!result[lacto.mes]) {
         result[lacto.mes] = {
@@ -23,31 +25,42 @@ const Lancamento = props => {
       } else {
         result[lacto.mes] = {
           mes: lacto.mes,
-          despesas: result[lacto.mes].despesas + (lacto.tipo === 'D' ? +lacto.valor : 0),
-          receitas: result[lacto.mes].receitas + (lacto.tipo === 'C' ? +lacto.valor : 0),
+          despesas:
+            result[lacto.mes].despesas +
+            (lacto.tipo === 'D' ? +lacto.valor : 0),
+          receitas:
+            result[lacto.mes].receitas +
+            (lacto.tipo === 'C' ? +lacto.valor : 0),
         };
       }
     });
+    renderItens();
   };
 
-  useEffect(() => {
-    (async () => {
-      await props.listarLancamentosAno(props.anoReferencia);
-      agruparDados();
-    })();
-  }, []);
-
-  return (
+  const renderItens = () => (
     <View>
       {result.map((l, i) => (
-        <View key={i} style={styles.container}>
-          <Text key={l.mes} style={styles.textBlack}>{mesExtenso(+l.mes)}</Text>
-          <Text key={`${l.mes}-R`} style={styles.textRed}>R$ {l.receitas.toFixed(2)}</Text>
-          <Text key={`${l.mes}-D`} style={styles.textBlue}>R$ {l.despesas.toFixed(2)}</Text>
-        </View>
+        <Card key={i}>
+          <Text key={l.mes} style={styles.textBlack}>
+            {mesExtenso(+l.mes)}.
+          </Text>
+          <Text key={`${l.mes}-R`} style={styles.textRed}>
+            R$ {l.receitas.toFixed(2)}
+          </Text>
+          <Text key={`${l.mes}-D`} style={styles.textBlue}>
+            R$ {l.despesas.toFixed(2)}
+          </Text>
+        </Card>
       ))}
     </View>
   );
+
+  useEffect(() => {
+    props.listarLancamentosAno(props.anoReferencia);
+    agruparDados();
+  }, [result.length]);
+
+  return <View>{renderItens()}</View>;
 };
 
 const styles = StyleSheet.create({
